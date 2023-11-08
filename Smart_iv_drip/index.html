@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <!-- ... (your existing meta tags) ... -->
+
+  <!-- Bootstrap CSS and other styles -->
+  <!-- ... (your existing CSS links) ... -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/login.css">
+
+  <title>SMART-IV</title>
+</head>
+<body>
+  <!-- Logo Container -->
+  <div id="logoContainer" class="container">
+    <!-- ... (your logo and title) ... -->
+    <img id="logo" src="/Logo.png" alt="Logo">
+    <h1>INFU GUARD</h1>
+  </div>
+
+  <!-- Login Form Container -->
+  <div class="container">
+    <div id="formDiv">
+      <form id="formLogin">
+        <!-- Email and Password Input Fields -->
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email Address</label>
+          <input type="email" class="form-control" id="emailID" aria-describedby="emailHelp" placeholder="Email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="pass" placeholder="yourname@hospital">
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" id="loginBt" class="btn btn-primary">Log In</button>
+
+        <!-- Status Message -->
+        <div id="status" class="alert alert-primary" role="alert"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript dependencies -->
+  <!-- ... (your existing JavaScript scripts) ... -->
+  <script type="text/javascript" src="/log-out.js"></script>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-auth.js"></script>
+ 
+  <!-- Your custom Firebase login script -->
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+        
+    apiKey: "AIzaSyBgj_jKGcI9EAhoEDcjTZp_Spng4VVpSTc",
+    authDomain: "fir-config1.firebaseapp.com",
+    databaseURL: "https://fir-config1-default-rtdb.firebaseio.com",
+    projectId: "fir-config1",
+    storageBucket: "fir-config1.appspot.com",
+    messagingSenderId: "543248063856",
+    appId: "1:543248063856:web:7d60fdf6080d0f778103b5"
+
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const statDiv = document.getElementById('status');
+    const form = document.getElementById('formLogin');
+    const noEmail = "auth/user-not-found";
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+     
+      const email = document.getElementById('emailID').value;
+      const password = document.getElementById('pass').value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(function() {
+          statDiv.style.color = 'rgb(0, 255, 0)';
+          statDiv.innerText = "Success";
+          window.location.href = 'options.html'; // Redirect after successful login
+          statDiv.style.visibility = "visible";
+        })
+        .catch(function(error) {
+          if (error.code === noEmail) {
+            auth.createUserWithEmailAndPassword(email, password)
+              .then(function() {
+                statDiv.style.color = 'rgb(0, 255, 0)';
+                statDiv.innerText = "Created a new user";
+                window.location.href = '/options.html'; // Redirect after successful signup
+              })
+              .catch(function(errorSignUp) {
+                statDiv.style.color = 'rgb(255, 0, 0)';
+                statDiv.innerText = errorSignUp.message;
+                statDiv.style.visibility = "visible";
+              });
+          } else {
+            statDiv.style.color = 'rgb(255, 0, 0)';
+            statDiv.innerText = error.message;
+            statDiv.style.visibility = "visible";
+          }
+        });
+
+      form.reset();
+    });
+  </script>
+
+  <!-- Prevent browser back button -->
+  <script type="text/javascript">
+    // ... (your existing browser back button script) ...
+  </script>
+</body>
+</html>
